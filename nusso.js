@@ -1,7 +1,3 @@
-/* eslint-disable vars-on-top */
-/* eslint-disable no-unused-vars */
-/* eslint-disable max-len */
-/* eslint-disable no-console */
 const axios = require('axios');
 
 // NU websso config
@@ -40,13 +36,11 @@ module.exports = {
         },
       });
       const sessionInfoResponse = await axiosInstance.post(WEBSSO_IDENTITY_CONFIRMATION_URL, requestBody, { headers: requestHeaders });
-      console.log(`SSO Helper | got session info | Status: ${JSON.stringify(sessionInfoResponse.status)}`);
       return {
         status: sessionInfoResponse.status,
         data: sessionInfoResponse.data,
       };
     } catch (err) {
-      console.log(`SSO Helper | get session info | An error occurred getting session info: ${JSON.stringify(err.response.data)}`);
       return {
         status: err.response.status,
         data: err.response.data,
