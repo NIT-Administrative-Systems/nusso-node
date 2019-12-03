@@ -4,8 +4,6 @@
 /* eslint-disable no-console */
 const axios = require('axios');
 
-// This helper contains the northwestern-specific sso methods. It will eventually be turned into a package.
-
 // NU websso config
 const SSO_COOKIE_NAME = 'nusso';
 const NETID_PROPERTY_NAME = 'username';

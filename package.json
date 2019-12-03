@@ -1,11 +1,16 @@
 {
   "name": "nusso",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "Node.js package for Northwestern WebSSO/DUO node implementation",
   "main": "nusso.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Casey Colby",
-  "license": "ISC"
+  "license": "UNLICENSED", 
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NIT-Administrative-Systems/nusso-node.git"
+  }
 }
