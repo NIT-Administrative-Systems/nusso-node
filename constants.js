@@ -1,3 +1,5 @@
+/** @module Constants */
+
 /**
  * The name of the NU SSO cookie
  * @constant
