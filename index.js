@@ -112,7 +112,6 @@ module.exports = {
 
   /**
    * Get the user's netid
-   * @async
    * @param {sessionInfoResponse} sessionInfo - The response from the session info service (status, body)
    * @returns {String} the logged in user's netid if it exists in the session info (null otherwise)
    */
