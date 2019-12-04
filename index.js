@@ -1,23 +1,19 @@
 const axios = require('axios');
+const constants = require('./constants');
 
-// NU websso config
-const SSO_COOKIE_NAME = 'nusso';
-const NETID_PROPERTY_NAME = 'username';
-const DUO_PROPERTY_NAME = 'isDuoAuthenticated';
-
-const DOMAIN = 'dev-websso.it.northwestern.edu';
-const REALM = 'northwestern';
-const LDAP_TREE = 'ldap-registry';
-const LDAP_AND_DUO_TREE = 'ldap-and-duo';
-
-// raw node.js calls to the NU WebSSO and Duo methods
+/** @module NorthwesternSSO */
 module.exports = {
+  /**
+   * Parses json object of all cookies and returns the sso cookie value
+   * @param {Object} requestCookies - A JSON object of all request cookies to check
+   * @returns {String} The SSO request cookie value
+   */
   getSSOCookie(requestCookies) {
-    return requestCookies[SSO_COOKIE_NAME];
+    return requestCookies[constants.SSO_COOKIE_NAME];
   },
 
   async getSessionInfo(tokenId) {
-    const WEBSSO_IDENTITY_CONFIRMATION_URL = `https://${DOMAIN}/nusso/json/realms/root/realms/${REALM}/sessions?_action=getSessionInfo`;
+    const WEBSSO_IDENTITY_CONFIRMATION_URL = `https://${constants.DOMAIN}/nusso/json/realms/root/realms/${constants.REALM}/sessions?_action=getSessionInfo`;
     const requestBody = {
       tokenId,
       realm: '/',
@@ -51,7 +47,7 @@ module.exports = {
   isLoggedIn(sessionInfo) {
     switch (sessionInfo.status) {
       case 200:
-        if (sessionInfo.data[NETID_PROPERTY_NAME]) {
+        if (sessionInfo.data[constants.NETID_PROPERTY_NAME]) {
           return true;
         }
         return false;
@@ -65,8 +61,8 @@ module.exports = {
   isDuoAuthenticated(sessionInfo) {
     switch (sessionInfo.status) {
       case 200:
-        if (sessionInfo.data[NETID_PROPERTY_NAME]) {
-          if (sessionInfo.data[DUO_PROPERTY_NAME] === true) {
+        if (sessionInfo.data[constants.NETID_PROPERTY_NAME]) {
+          if (sessionInfo.data[constants.DUO_PROPERTY_NAME] === true) {
             return true;
           }
           return false;
@@ -81,12 +77,12 @@ module.exports = {
 
   getLoginUrl(isDuoRequired, redirectUrl) {
     // direct to different tree depending on duo requirement
-    const WEBSSO_LOGIN_URL = `https://${DOMAIN}/nusso/XUI/?realm=${REALM}#login&authIndexType=service&authIndexValue=${isDuoRequired ? LDAP_AND_DUO_TREE : LDAP_TREE}&goto=${redirectUrl}`;
+    const WEBSSO_LOGIN_URL = `https://${constants.DOMAIN}/nusso/XUI/?realm=${constants.REALM}#login&authIndexType=service&authIndexValue=${isDuoRequired ? constants.LDAP_AND_DUO_TREE : constants.LDAP_TREE}&goto=${redirectUrl}`;
     return WEBSSO_LOGIN_URL;
   },
 
   getNetID(sessionInfo) {
-    return sessionInfo.data[NETID_PROPERTY_NAME];
+    return sessionInfo.data[constants.NETID_PROPERTY_NAME];
   },
 
 };

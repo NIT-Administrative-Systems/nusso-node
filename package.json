@@ -2,13 +2,18 @@
   "name": "nusso",
   "version": "0.2.1",
   "description": "Node.js package for Northwestern WebSSO/DUO node implementation",
-  "main": "nusso.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\""
+    "test": "echo \"Error: no test specified\"",
+    "generate-docs": "jsdoc -c ./docs-src/jsdoc.json"
   },
   "author": "Casey Colby",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.0"
-  }
+  },
+  "files": [
+    "/index.js",
+    "/constants.js"
+  ]
 }
