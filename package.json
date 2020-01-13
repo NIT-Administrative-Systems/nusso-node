@@ -15,5 +15,6 @@
   "files": [
     "/index.js",
     "/constants.js"
-  ]
+  ],
+  "devDependencies": {}
 }
