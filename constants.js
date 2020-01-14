@@ -26,7 +26,7 @@ const DUO_PROPERTY_NAME = 'isDuoAuthenticated';
  * @constant
  * @type {string}
 */
-const APIGEE_BASE_URL = 'northwestern-dev.apigee.net';
+const APIGEE_BASE_URL = 'northwestern-test.apigee.net';
 
 /**
  * The apigee proxy 

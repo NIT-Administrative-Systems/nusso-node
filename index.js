@@ -43,7 +43,6 @@ module.exports = {
         },
       });
       const sessionInfoResponse = await axiosInstance.get(url, { headers: requestHeaders });
-      console.log(sessionInfoResponse);
       return {
         status: sessionInfoResponse.status,
         data: sessionInfoResponse.data,
@@ -84,7 +83,7 @@ module.exports = {
     switch (sessionInfo.status) {
       case 200:
         if (sessionInfo.data[constants.NETID_PROPERTY_NAME]) {
-          if (sessionInfo.data[constants.DUO_PROPERTY_NAME] === true) {
+          if (sessionInfo.data.properties[constants.DUO_PROPERTY_NAME] == 'true') {
             return true;
           }
           return false;
