@@ -23,17 +23,15 @@ module.exports = {
    * Calls websso url to get information about the session for a given sso token
    * @async
    * @param {String} tokenId - The value in the sso cookie
+   * @param {String} apigeeApiKey - The application's apigee apikey
    * @returns {sessionInfoResponse} Returns an object with the sessionInfo request status and request body
    */
-  async getSessionInfo(tokenId) {
-    const WEBSSO_IDENTITY_CONFIRMATION_URL = `https://${constants.DOMAIN}/nusso/json/realms/root/realms/${constants.REALM}/sessions?_action=getSessionInfo`;
-    const requestBody = {
-      tokenId,
-      realm: '/',
-    };
+  async getSessionInfo(tokenId, apigeeApiKey) {
+    const url = `https://${constants.APIGEE_BASE_URL}/${constants.APIGEE_PROXY_NAME}/${constants.APIGEE_SESSION_INFO_PATH}`;
     const requestHeaders = {
+      'webssotoken': tokenId,
+      'apikey': apigeeApiKey,
       'Content-Type': 'application/json',
-      'Accept-API-Version': 'resource=3',
     };
 
     try {
@@ -44,7 +42,7 @@ module.exports = {
           return status >= 200 && status < 500;
         },
       });
-      const sessionInfoResponse = await axiosInstance.post(WEBSSO_IDENTITY_CONFIRMATION_URL, requestBody, { headers: requestHeaders });
+      const sessionInfoResponse = await axiosInstance.get(url, { headers: requestHeaders });
       return {
         status: sessionInfoResponse.status,
         data: sessionInfoResponse.data,
@@ -85,7 +83,7 @@ module.exports = {
     switch (sessionInfo.status) {
       case 200:
         if (sessionInfo.data[constants.NETID_PROPERTY_NAME]) {
-          if (sessionInfo.data[constants.DUO_PROPERTY_NAME] === true) {
+          if (sessionInfo.data.properties[constants.DUO_PROPERTY_NAME] == 'true') {
             return true;
           }
           return false;
@@ -102,12 +100,33 @@ module.exports = {
    * Get the url for redirect to websso login
    * @param {Boolean} isDuoRequired - Whether to generate a url for login-only or login+duo
    * @param {String} redirectUrl - the url to redirect to once login is successfully completed
+   * @param {String} apigeeApiKey - the application's api key
    * @returns {String} A websso login url
    */
-  getLoginUrl(isDuoRequired, redirectUrl) {
-    // direct to different tree depending on duo requirement
-    const WEBSSO_LOGIN_URL = `https://${constants.DOMAIN}/nusso/XUI/?realm=${constants.REALM}#login&authIndexType=service&authIndexValue=${isDuoRequired ? constants.LDAP_AND_DUO_TREE : constants.LDAP_TREE}&goto=${redirectUrl}`;
-    return WEBSSO_LOGIN_URL;
+  async getLoginUrl(isDuoRequired, redirectUrl, apigeeApiKey) {
+    const url = `https://${constants.APIGEE_BASE_URL}/${constants.APIGEE_PROXY_NAME}/${isDuoRequired ? constants.APIGEE_LDAP_AND_DUO_PATH : constants.APIGEE_LDAP_ONLY_PATH}`;
+    const requestHeaders = {
+      'Content-Type': 'application/json',
+      'goto': redirectUrl,
+      'apikey': apigeeApiKey,
+    };
+
+    try {
+      // create axios instace with the validateStatus configuration so that we can process diverse set of response codes
+      // otherwise it treats anything not 200 as a rejected promise and executes the catch block
+      const axiosInstance = axios.create({
+        validateStatus(status) {
+          return status >= 200 && status < 500;
+        },
+      });
+      const sessionInfoResponse = await axiosInstance.get(url, { headers: requestHeaders });
+      return sessionInfoResponse.data.redirecturl;
+    } catch (err) {
+      return {
+        status: err.response.status,
+        data: err.response.data,
+      };
+    }
   },
 
   /**
