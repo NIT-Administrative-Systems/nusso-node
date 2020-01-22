@@ -98,6 +98,7 @@ module.exports = {
 
   /**
    * Get the url for redirect to websso login
+   * @async
    * @param {Boolean} isDuoRequired - Whether to generate a url for login-only or login+duo
    * @param {String} redirectUrl - the url to redirect to once login is successfully completed
    * @param {String} apigeeApiKey - the application's api key
