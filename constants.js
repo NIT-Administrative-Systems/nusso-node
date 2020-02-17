@@ -22,13 +22,6 @@ const NETID_PROPERTY_NAME = 'username';
 const DUO_PROPERTY_NAME = 'isDuoAuthenticated';
 
 /**
- * The apigee base url
- * @constant
- * @type {string}
-*/
-const APIGEE_BASE_URL = 'northwestern-test.apigee.net';
-
-/**
  * The apigee proxy 
  * @constant
  * @type {string}

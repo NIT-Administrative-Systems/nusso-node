@@ -23,11 +23,12 @@ module.exports = {
    * Calls websso url to get information about the session for a given sso token
    * @async
    * @param {String} tokenId - The value in the sso cookie
+   * @param {String} apigeeEnv - The apigee environnment to call (dev, test, prod)
    * @param {String} apigeeApiKey - The application's apigee apikey
    * @returns {sessionInfoResponse} Returns an object with the sessionInfo request status and request body
    */
-  async getSessionInfo(tokenId, apigeeApiKey) {
-    const url = `https://${constants.APIGEE_BASE_URL}/${constants.APIGEE_PROXY_NAME}/${constants.APIGEE_SESSION_INFO_PATH}`;
+  async getSessionInfo(tokenId, apigeeEnv, apigeeApiKey) {
+    const url = `https://northwestern-${apigeeEnv}.apigee.net/${constants.APIGEE_PROXY_NAME}/${constants.APIGEE_SESSION_INFO_PATH}`;
     const requestHeaders = {
       'webssotoken': tokenId,
       'apikey': apigeeApiKey,
@@ -101,11 +102,12 @@ module.exports = {
    * @async
    * @param {Boolean} isDuoRequired - Whether to generate a url for login-only or login+duo
    * @param {String} redirectUrl - the url to redirect to once login is successfully completed
+   * @param {String} apigeeEnv - The apigee environnment to call (dev, test, prod)
    * @param {String} apigeeApiKey - the application's api key
    * @returns {String} A websso login url
    */
-  async getLoginUrl(isDuoRequired, redirectUrl, apigeeApiKey) {
-    const url = `https://${constants.APIGEE_BASE_URL}/${constants.APIGEE_PROXY_NAME}/${isDuoRequired ? constants.APIGEE_LDAP_AND_DUO_PATH : constants.APIGEE_LDAP_ONLY_PATH}`;
+  async getLoginUrl(isDuoRequired, redirectUrl, apigeeEnv, apigeeApiKey) {
+    const url = `https://northwestern-${apigeeEnv}.apigee.net/${constants.APIGEE_PROXY_NAME}/${isDuoRequired ? constants.APIGEE_LDAP_AND_DUO_PATH : constants.APIGEE_LDAP_ONLY_PATH}`;
     const requestHeaders = {
       'Content-Type': 'application/json',
       'goto': redirectUrl,
