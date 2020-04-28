@@ -118,6 +118,32 @@ module.exports = {
     }
   },
 
+    /**
+   * Get the url for redirect to websso logout
+   * @async
+   * @param {String} apigeeEnv - The apigee environnment to call (dev, test, prod)
+   * @param {String} apigeeApiKey - the application's api key
+   * @returns {String} A websso logout url
+   */
+  async getLogoutUrl(apigeeEnv, apigeeApiKey) {
+    const url = `https://northwestern-${apigeeEnv}.apigee.net/${constants.APIGEE_PROXY_NAME}/logout`;
+    const requestHeaders = {
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      const sessionInfoResponse = await this.createAxios().get(url, { headers: requestHeaders });
+
+      return sessionInfoResponse.data.url;
+    } catch (err) {
+      console.log(err);
+      return {
+        status: err.response.status,
+        data: err.response.data,
+      };
+    }
+  },
+
   /**
    * Get the user's netid
    * @param {sessionInfoResponse} sessionInfo - The response from the session info service (status, body)
