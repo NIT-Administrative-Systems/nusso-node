@@ -36,14 +36,7 @@ module.exports = {
     };
 
     try {
-      // create axios instace with the validateStatus configuration so that we can process diverse set of response codes
-      // otherwise it treats anything not 200 as a rejected promise and executes the catch block
-      const axiosInstance = axios.create({
-        validateStatus(status) {
-          return status >= 200 && status < 500;
-        },
-      });
-      const sessionInfoResponse = await axiosInstance.get(url, { headers: requestHeaders });
+      const sessionInfoResponse = await this.createAxios().get(url, { headers: requestHeaders });
       return {
         status: sessionInfoResponse.status,
         data: sessionInfoResponse.data,
@@ -115,14 +108,7 @@ module.exports = {
     };
 
     try {
-      // create axios instace with the validateStatus configuration so that we can process diverse set of response codes
-      // otherwise it treats anything not 200 as a rejected promise and executes the catch block
-      const axiosInstance = axios.create({
-        validateStatus(status) {
-          return status >= 200 && status < 500;
-        },
-      });
-      const sessionInfoResponse = await axiosInstance.get(url, { headers: requestHeaders });
+      const sessionInfoResponse = await this.createAxios().get(url, { headers: requestHeaders });
       return sessionInfoResponse.data.redirecturl;
     } catch (err) {
       return {
@@ -139,6 +125,22 @@ module.exports = {
    */
   getNetID(sessionInfo) {
     return sessionInfo.data[constants.NETID_PROPERTY_NAME];
+  },
+
+  /**
+   * Creates an Axios instance that tolerates more response codes.
+   * 
+   * Instance is created with the validateStatus configuration so that we can process diverse set of response codes.
+   * Otherwise it treats anything not 200 as a rejected promise and executes the catch block
+   * 
+   * @private
+   */
+  createAxios() {
+    return axios.create({
+      validateStatus(status) {
+        return status >= 200 && status < 500;
+      },
+    });
   },
 
 };
