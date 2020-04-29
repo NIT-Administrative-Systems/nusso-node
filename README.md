@@ -18,3 +18,8 @@ https://nit-administrative-systems.github.io/nusso-node/
 Pull requests welcome! 
 - Test changes to the nusso package locally by running `npm link nusso` in your application
 - Generated updated documentation by running `npm run generate-docs`
+
+## Publishing
+```
+np
+```
