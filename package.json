@@ -3,6 +3,10 @@
   "version": "2.2.0",
   "description": "Node.js package for Northwestern WebSSO/DUO node implementation",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NIT-Administrative-Systems/nusso-node.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\"",
     "generate-docs": "jsdoc -c ./docs-src/jsdoc.json"
