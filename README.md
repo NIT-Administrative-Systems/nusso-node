@@ -10,9 +10,7 @@ const nusso = require('nusso');
 ```
 
 ## Docs
-```
 https://nit-administrative-systems.github.io/nusso-node/
-```
 
 ## Contributing 
 Pull requests welcome! 
