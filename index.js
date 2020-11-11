@@ -1,5 +1,6 @@
 const axios = require('axios');
 const constants = require('./constants');
+const { AgentlessWebssoError } = require('./model/AgentlessWebssoError');
 
 /** @module NorthwesternSSO */
 
@@ -36,16 +37,13 @@ module.exports = {
     };
 
     try {
-      const sessionInfoResponse = await this.createAxios().get(url, { headers: requestHeaders });
+      const sessionInfoResponse = await axios.get(url, { headers: requestHeaders });
       return {
         status: sessionInfoResponse.status,
         data: sessionInfoResponse.data,
       };
     } catch (err) {
-      return {
-        status: err.response.status,
-        data: err.response.data,
-      };
+      throw new AgentlessWebssoError('Error getting session info for cookie', err.response.status, err.response.data);
     }
   },
 
@@ -108,13 +106,10 @@ module.exports = {
     };
 
     try {
-      const sessionInfoResponse = await this.createAxios().get(url, { headers: requestHeaders });
+      const sessionInfoResponse = await axios.get(url, { headers: requestHeaders });
       return sessionInfoResponse.data.redirecturl;
     } catch (err) {
-      return {
-        status: err.response.status,
-        data: err.response.data,
-      };
+      throw new AgentlessWebssoError('Error getting sso login url', err.response.status, err.response.data);
     }
   },
 
@@ -132,15 +127,11 @@ module.exports = {
     };
 
     try {
-      const sessionInfoResponse = await this.createAxios().get(url, { headers: requestHeaders });
+      const sessionInfoResponse = await axios.get(url, { headers: requestHeaders });
 
       return sessionInfoResponse.data.url;
     } catch (err) {
-      console.log(err);
-      return {
-        status: err.response.status,
-        data: err.response.data,
-      };
+      throw new AgentlessWebssoError('Error getting sso logout url', err.response.status, err.response.data);
     }
   },
 
@@ -151,22 +142,6 @@ module.exports = {
    */
   getNetID(sessionInfo) {
     return sessionInfo.data[constants.NETID_PROPERTY_NAME];
-  },
-
-  /**
-   * Creates an Axios instance that tolerates more response codes.
-   * 
-   * Instance is created with the validateStatus configuration so that we can process diverse set of response codes.
-   * Otherwise it treats anything not 200 as a rejected promise and executes the catch block
-   * 
-   * @private
-   */
-  createAxios() {
-    return axios.create({
-      validateStatus(status) {
-        return status >= 200 && status < 500;
-      },
-    });
   },
 
 };
