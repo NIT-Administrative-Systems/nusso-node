@@ -6,7 +6,7 @@ class AgentlessWebssoError extends Error {
       this.status = status || 500;
       this.data = errorData;
   
-      this.logError();
+    //   this.logError();
     }
   
     logError() {
