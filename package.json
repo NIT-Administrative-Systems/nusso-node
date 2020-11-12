@@ -18,7 +18,8 @@
   },
   "files": [
     "/index.js",
-    "/constants.js"
+    "/constants.js",
+    "/model/AgentlessWebssoError.js"
   ],
   "devDependencies": {}
 }
