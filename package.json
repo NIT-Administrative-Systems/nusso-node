@@ -1,6 +1,6 @@
 {
   "name": "nusso",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Node.js package for Northwestern WebSSO/DUO node implementation",
   "main": "index.js",
   "repository": {
