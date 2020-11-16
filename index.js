@@ -43,7 +43,17 @@ module.exports = {
         data: sessionInfoResponse.data,
       };
     } catch (err) {
-      throw new AgentlessWebssoError('Error getting session info for cookie', err.response.status, err.response.data);
+      // NOTE Apigee returns a 500 status when the cookie is not valid even though OpenAM returns a 401 when the cookie is not valid 
+      if (err.response.data.fault.faultstring.includes("ResponseCode 401 is treated as error")){
+        console.log('nusso node package | Apigee AgentlessWebsso returned 500 when cookie not logged in. returning 401 openAM body for use with isLoggedIn method instead of throwing 500');
+        return {
+          "code": 401,
+          "reason": "Unauthorized",
+          "message": "Access Denied"
+        };
+      } else {
+        throw new AgentlessWebssoError('Error getting session info for cookie', err.response.status, err.response.data);
+      }
     }
   },
 
