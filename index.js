@@ -43,16 +43,20 @@ module.exports = {
         data: sessionInfoResponse.data,
       };
     } catch (err) {
+      if (err.response && err.response.data && err.response.data.fault && err.response.data.fault.faultstring) {
       // NOTE Apigee returns a 500 status when the cookie is not valid even though OpenAM returns a 401 when the cookie is not valid 
-      if (err.response.data.fault.faultstring.includes("ResponseCode 401 is treated as error")){
-        console.log('nusso node package | Apigee AgentlessWebsso returned 500 when cookie not logged in. returning 401 openAM body for use with isLoggedIn method instead of throwing 500');
-        return {
-          "code": 401,
-          "reason": "Unauthorized",
-          "message": "Access Denied"
-        };
-      } else {
+        if (err.response.data.fault.faultstring.includes("ResponseCode 401 is treated as error")){
+          // console.log('nusso node package | Apigee AgentlessWebsso returned 500 when cookie not logged in. returning 401 openAM body for use with isLoggedIn method instead of throwing 500');
+          return {
+            "code": 401,
+            "reason": "Unauthorized",
+            "message": "Access Denied"
+          };
+        } 
+      } else if (err.response && err.response.data && err.response.status) {
         throw new AgentlessWebssoError('Error getting session info for cookie', err.response.status, err.response.data);
+      } else {
+        throw new AgentlessWebssoError('Error getting session info for cookie', 500, err);
       }
     }
   },
@@ -119,7 +123,11 @@ module.exports = {
       const sessionInfoResponse = await axios.get(url, { headers: requestHeaders });
       return sessionInfoResponse.data.redirecturl;
     } catch (err) {
-      throw new AgentlessWebssoError('Error getting sso login url', err.response.status, err.response.data);
+      if (err.response && err.response.status && err.response.data) {
+        throw new AgentlessWebssoError('Error getting sso login url', err.response.status, err.response.data);
+      } else {
+        throw new AgentlessWebssoError('Error getting sso login url', 500, err);
+      }
     }
   },
 
@@ -141,7 +149,11 @@ module.exports = {
 
       return sessionInfoResponse.data.url;
     } catch (err) {
-      throw new AgentlessWebssoError('Error getting sso logout url', err.response.status, err.response.data);
+      if (err.response && err.response.status && err.response.data) {
+        throw new AgentlessWebssoError('Error getting sso logout url', err.response.status, err.response.data);
+      } else {
+        throw new AgentlessWebssoError('Error getting sso logout url', 500, err);
+      }
     }
   },
 
