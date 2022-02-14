@@ -14,7 +14,7 @@
   "author": "Casey Colby",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.25.0"
+    "axios": "^0.26.0"
   },
   "files": [
     "/index.js",
