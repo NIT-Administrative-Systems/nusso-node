@@ -1,6 +1,6 @@
 {
   "name": "nusso",
-  "version": "3.1.7",
+  "version": "3.1.8",
   "description": "Node.js package for Northwestern WebSSO/DUO node implementation",
   "main": "index.js",
   "repository": {
@@ -14,7 +14,7 @@
   "author": "Casey Colby",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.26.0"
+    "axios": "^1.13.5"
   },
   "files": [
     "/index.js",
